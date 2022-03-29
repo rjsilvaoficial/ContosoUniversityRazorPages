@@ -5,6 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ContosoUniversity.Models;
 
+
+//Em um aplicativo Web, o DbContext que lê uma entidade e exibe os dados é descartado depois que uma página é renderizada. 
+//Quando o método OnPostAsync de uma página é chamado, é feita uma nova solicitação da Web e com uma nova instância do DbContext. 
+//A nova leitura da entidade nesse novo contexto simula o processamento da área de trabalho.
+
 namespace ContosoUniversity.Data
 {
     public class SchoolContext : DbContext
