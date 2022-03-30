@@ -31,7 +31,7 @@ namespace ContosoUniversity.Pages.Students
         public IList<Student> Students { get; set; }
 
         //O método de listagem precisa receber um parametro string que conterá auxiliará com a info sobre a ordenação
-        public async Task OnGetAsync(string sortOrder)
+        public async Task OnGetAsync(string sortOrder, string searchString)
         {
             // using System;
             //NameSort = "name_desc" se sortOrder for nulo ou vazio, senão sera vazio
@@ -39,10 +39,17 @@ namespace ContosoUniversity.Pages.Students
             //Se sortOrder == Date, o DateSort = date_desc, senão recebe Date
             DateSort = sortOrder == "Date" ? "date_desc" : "Date";
 
+            CurrentFilter = searchString;
             //Aqui fazemos aquela busca no banco retornando todos os Students
             //IQueryable faz um objeto que só validará a efetivação da consulta quando se tornar uma coleção (ToListAsync())
             IQueryable<Student> studentsIQ = from s in _context.Students
                                              select s;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                studentsIQ = studentsIQ.Where(s => s.LastName.Contains(searchString)
+                                       || s.FirstMidName.Contains(searchString));
+            }
 
             //Aqui o swtich usa o sortOrder para ordenar a lista
             switch (sortOrder)
