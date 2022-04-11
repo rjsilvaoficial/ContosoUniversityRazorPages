@@ -6,6 +6,7 @@
 }
 
 <h2>Students</h2>
+
 <p>
     <a asp-page="Create">Create New</a>
 </p>
@@ -25,7 +26,8 @@
     <thead>
         <tr>
             <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.NameSort">
+                @*assim mantemos o filtro mesmo com a ordenação*@
+                <a asp-page="./Index" asp-route-sortOrder="@Model.NameSort" asp-route-searchString="@Model.CurrentFilter" asp-route-pagina="@Model.PaginaAtual">
                     @Html.DisplayNameFor(model => model.Students[0].LastName)
                 </a>
             </th>
@@ -33,7 +35,8 @@
                 @Html.DisplayNameFor(model => model.Students[0].FirstMidName)
             </th>
             <th>
-                <a asp-page="./Index" asp-route-sortOrder="@Model.DateSort">
+                @*assim mantemos o filtro mesmo com a ordenação*@
+                <a asp-page="./Index" asp-route-sortOrder="@Model.DateSort" asp-route-searchString="@Model.CurrentFilter" asp-route-pagina="@Model.PaginaAtual">
                     @Html.DisplayNameFor(model => model.Students[0].EnrollmentDate)
                 </a>
             </th>
@@ -62,3 +65,56 @@
         }
     </tbody>
 </table>
+
+@if (Model.PaginaAtual == 1)
+{
+    <a asp-page="./Index"
+       asp-route-sortOrder="@Model.CurrentSort"
+       asp-route-pagina="1"
+       asp-route-searchString="@Model.CurrentFilter"
+       class="btn btn-primary disabled">
+        Previous
+    </a>
+}
+else
+{
+    <a asp-page="./Index"
+       asp-route-sortOrder="@Model.CurrentSort"
+       asp-route-pagina="@(Model.PaginaAtual - 1)"
+       asp-route-searchString="@Model.CurrentFilter"
+       class="btn btn-primary">
+        Previous
+    </a>
+}
+
+@for (int i = 1; i <= Model.QuantidadePaginas; i++)
+{
+    <a asp-page="./Index"
+       asp-route-sortOrder="@Model.CurrentSort"
+       asp-route-pagina="@i"
+       asp-route-searchString="@Model.CurrentFilter"
+       class="btn btn-primary">
+        @i
+    </a>
+}
+
+@if (Model.PaginaAtual < Model.QuantidadePaginas)
+{
+    <a asp-page="./Index"
+       asp-route-sortOrder="@Model.CurrentSort"
+       asp-route-pagina="@(Model.PaginaAtual + 1)"
+       asp-route-searchString="@Model.CurrentFilter"
+       class="btn btn-primary">
+        Next
+    </a>
+}
+else
+{
+    <a asp-page="./Index"
+       asp-route-sortOrder="@Model.CurrentSort"
+       asp-route-pagina="@Model.QuantidadePaginas"
+       asp-route-searchString="@Model.CurrentFilter"
+       class="btn btn-primary disabled">
+        Next
+    </a>
+}

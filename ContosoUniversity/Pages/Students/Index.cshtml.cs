@@ -1,47 +1,51 @@
-﻿using System;
+﻿using ContosoUniversity.Data;
+using ContosoUniversity.Models;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using ContosoUniversity.Data;
-using ContosoUniversity.Models;
 
 namespace ContosoUniversity.Pages.Students
 {
     public class IndexModel : PageModel
     {
-        private readonly ContosoUniversity.Data.SchoolContext _context;
+        private readonly SchoolContext _context;
 
-        public IndexModel(ContosoUniversity.Data.SchoolContext context)
+        public IndexModel(SchoolContext context)
         {
             _context = context;
         }
 
-        public IList<Student> Student { get;set; }
-
-        //Para adicionar a classificação são adicionadas variáveis correspondentes aos atributos sobre os quais ela sera aplicada
-        //Em seguida são adicionadas variáveis para receber o filtro em vigor atualmente e a ordenação
         public string NameSort { get; set; }
         public string DateSort { get; set; }
         public string CurrentFilter { get; set; }
         public string CurrentSort { get; set; }
-
         public IList<Student> Students { get; set; }
 
-        //O método de listagem precisa receber um parametro string que conterá auxiliará com a info sobre a ordenação
-        public async Task OnGetAsync(string sortOrder, string searchString)
+
+
+        public int QuantidadeItens { get; set; }
+
+        private const int _itensPorPagina = 3;  
+        public int QuantidadePaginas { get; set; }
+        public int PaginaAtual { get; set; }
+
+
+
+
+
+        //começando a paginação
+        public async Task OnGetAsync(string sortOrder, string searchString, int? pagina = 1)
         {
-            // using System;
-            //NameSort = "name_desc" se sortOrder for nulo ou vazio, senão sera vazio
             NameSort = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-            //Se sortOrder == Date, o DateSort = date_desc, senão recebe Date
             DateSort = sortOrder == "Date" ? "date_desc" : "Date";
 
             CurrentFilter = searchString;
-            //Aqui fazemos aquela busca no banco retornando todos os Students
-            //IQueryable faz um objeto que só validará a efetivação da consulta quando se tornar uma coleção (ToListAsync())
+            CurrentSort = sortOrder;
+
             IQueryable<Student> studentsIQ = from s in _context.Students
                                              select s;
 
@@ -51,11 +55,11 @@ namespace ContosoUniversity.Pages.Students
                                        || s.FirstMidName.Contains(searchString));
             }
 
-            //Aqui o swtich usa o sortOrder para ordenar a lista
+            //O switch incluso aqui, gera a classificação de TODA a lista de resultados, não somente a página atual
             switch (sortOrder)
             {
                 case "name_desc":
-                    studentsIQ = studentsIQ.OrderByDescending(s => s.LastName);
+                    studentsIQ = studentsIQ.OrderByDescending(s => s.LastName.ToUpper());
                     break;
                 case "Date":
                     studentsIQ = studentsIQ.OrderBy(s => s.EnrollmentDate);
@@ -64,13 +68,45 @@ namespace ContosoUniversity.Pages.Students
                     studentsIQ = studentsIQ.OrderByDescending(s => s.EnrollmentDate);
                     break;
                 default:
-                    studentsIQ = studentsIQ.OrderBy(s => s.LastName);
+                    studentsIQ = studentsIQ.OrderBy(s => s.LastName.ToUpper());
                     break;
             }
 
 
-                    Students = await studentsIQ.AsNoTracking().ToListAsync();
 
+            //Esta linha gera uma referência à stundentsIQ
+            var studentsIQQuery = studentsIQ;
+
+            //Esta linha usa a var com referência  a stundentsIQ para gerar um resultado particular
+            //(a quantidade de itens do tipo student no db)
+            QuantidadeItens = await studentsIQQuery.CountAsync();
+
+            //Aqui teremos o valor 1 (default) ou o valor passado na url (prop Value garante isso)
+            PaginaAtual = pagina.Value;
+
+            QuantidadePaginas = Convert.ToInt32(Math.Ceiling(QuantidadeItens * 1M / _itensPorPagina));
+
+            studentsIQ = studentsIQ.Skip(PaginaAtual * _itensPorPagina - _itensPorPagina).Take(_itensPorPagina);
+
+
+            //Neste local o switch ordena o conteúdo da página em exibição
+            //switch (sortOrder)
+            //{
+            //    case "name_desc":
+            //        studentsIQ = studentsIQ.OrderByDescending(s => s.LastName.ToUpper());
+            //        break;
+            //    case "Date":
+            //        studentsIQ = studentsIQ.OrderBy(s => s.EnrollmentDate);
+            //        break;
+            //    case "date_desc":
+            //        studentsIQ = studentsIQ.OrderByDescending(s => s.EnrollmentDate);
+            //        break;
+            //    default:
+            //        studentsIQ = studentsIQ.OrderBy(s => s.LastName.ToUpper());
+            //        break;
+            //}
+
+            Students = await studentsIQ.AsNoTracking().ToListAsync();
         }
     }
 }
