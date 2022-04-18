@@ -11,7 +11,7 @@
     <a asp-page="Create">Create New</a>
 </p>
 
-<form asp-page="./Index" method="get">
+<form asp-page="./Index" method="get" > @*CurrentSort para o caso de eu querer manter a classificação*@
     <div class="form-actions no-color">
         <p>
             Find by name:
@@ -89,10 +89,10 @@ else
 
 @for (int i = 1; i <= Model.QuantidadePaginas; i++)
 {
-    <a asp-page="./Index"
-       asp-route-sortOrder="@Model.CurrentSort"
-       asp-route-pagina="@i"
-       asp-route-searchString="@Model.CurrentFilter"
+    <a asp-page="./Index" 
+       asp-route-sortOrder="@Model.CurrentSort" 
+       asp-route-pagina="@i" 
+       asp-route-searchString="@Model.CurrentFilter" 
        class="btn btn-primary">
         @i
     </a>
