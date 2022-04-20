@@ -23,6 +23,7 @@ namespace ContosoUniversity.Data
                 .WithMany(i => i.Courses);
             modelBuilder.Entity<Student>().ToTable("Student");
             modelBuilder.Entity<Instructor>().ToTable("Instructor");
+
         }
     }
 }

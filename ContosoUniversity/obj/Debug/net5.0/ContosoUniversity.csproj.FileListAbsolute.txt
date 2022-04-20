@@ -161,3 +161,8 @@ C:\Projetos\Razor\ContosoUniversity\ContosoUniversity\obj\Debug\net5.0\Razor\Pag
 C:\Projetos\Razor\ContosoUniversity\ContosoUniversity\obj\Debug\net5.0\Razor\Pages\Instructors\Details.cshtml.g.cs
 C:\Projetos\Razor\ContosoUniversity\ContosoUniversity\obj\Debug\net5.0\Razor\Pages\Instructors\Edit.cshtml.g.cs
 C:\Projetos\Razor\ContosoUniversity\ContosoUniversity\obj\Debug\net5.0\Razor\Pages\Instructors\Index.cshtml.g.cs
+C:\Projetos\Razor\ContosoUniversity\ContosoUniversity\obj\Debug\net5.0\Razor\Pages\Departments\Create.cshtml.g.cs
+C:\Projetos\Razor\ContosoUniversity\ContosoUniversity\obj\Debug\net5.0\Razor\Pages\Departments\Delete.cshtml.g.cs
+C:\Projetos\Razor\ContosoUniversity\ContosoUniversity\obj\Debug\net5.0\Razor\Pages\Departments\Details.cshtml.g.cs
+C:\Projetos\Razor\ContosoUniversity\ContosoUniversity\obj\Debug\net5.0\Razor\Pages\Departments\Edit.cshtml.g.cs
+C:\Projetos\Razor\ContosoUniversity\ContosoUniversity\obj\Debug\net5.0\Razor\Pages\Departments\Index.cshtml.g.cs

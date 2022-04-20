@@ -23,6 +23,21 @@ namespace ContosoUniversity.Models
 
         public int? InstructorID { get; set; }
 
+        [Timestamp]
+        public byte[] ConcurrencyToken { get; set; }
+
+        //Configurar Timestamp na OnModelCreating da fluentAPI:
+        //modelBuilder.Entity<Department>()
+        //.Property<byte[]>("ConcurrencyToken")
+        //.IsRowVersion();
+
+        //Como fiz a inclusão por DataAnnotation, o que ocorreu foi a inclusão das linhas abaixo por baixo do "capô" no modelBuilder
+        //b.Property<byte[]>("ConcurrencyToken")
+        //.IsConcurrencyToken()
+        //.ValueGeneratedOnAddOrUpdate()
+        //.HasColumnType("rowversion");
+
+
         public Instructor Administrator { get; set; }
         public ICollection<Course> Courses { get; set; }
     }
